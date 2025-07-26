@@ -58,43 +58,23 @@ public class ApiController {
     public String postEntry(
             @RequestParam String title,
             @RequestParam String body,
-            @RequestParam String time,
+            @RequestParam(required = false ) String time,
             @RequestParam(required = false ) String latitude,
             @RequestParam(required = false ) String longitude,
             @RequestParam(value = "istime", required = false, defaultValue = "false") boolean istime){
         Entry newEntry = new Entry();
         newEntry.setTitle(title);
         newEntry.setBody(body);
-        newEntry.setTime(time);
-        try{
-            newEntry.setLatitude(Double.parseDouble((String) latitude));
-        }catch  (NumberFormatException e) {
-            newEntry.setLatitude(null);
+        if(time==null){
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            String formattedNow = now.format(formatter);
+            newEntry.setTime(formattedNow);
+        }else{
+            newEntry.setTime(time);
         }
-        try{
-            newEntry.setLongitude(Double.parseDouble((String) longitude));
-        }catch  (NumberFormatException e) {
-           newEntry.setLongitude(null);
- 
-        }
-        System.out.println(title);
-        this.EntityRepository.save(newEntry);
-        return("redirect:/");
-    }
-    @PostMapping("/entries")
-    public String postEntryFormal(
-            @RequestParam String title,
-            @RequestParam String body,
-            @RequestParam(required = false ) String latitude,
-            @RequestParam(required = false ) String longitude,
-            @RequestParam(value = "istime", required = false, defaultValue = "false") boolean istime){
-        Entry newEntry = new Entry();
-        newEntry.setTitle(title);
-        newEntry.setBody(body);
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        String formattedNow = now.format(formatter);
-        newEntry.setTime(formattedNow);
+        
+
         try{
             newEntry.setLatitude(Double.parseDouble((String) latitude));
         }catch  (NumberFormatException e) {

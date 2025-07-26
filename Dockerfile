@@ -3,7 +3,7 @@
 
 FROM eclipse-temurin:21-jre
 
-WORKDIR /app
+WORKDIR /logger
 
 COPY target/logger-0.0.1-SNAPSHOT.jar app.jar
 
